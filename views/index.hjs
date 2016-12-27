@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <div id="inputs_div" >
+			<input type="text" id="user_input">
+			<input type="button" id="user_submit" value="submit">
+		</div>
+		<div id="update_info" style="font-size:25px">
+			
+		Last post:<br/>
+				<span id="posted_data" style="padding-left:5px;font-size:50px;color:red;">the I am of this age an I like doing my staff the best way I am of this age an I like doing my staff the best way post</span><br/>
+		    	<span id="posted_time" style="padding-left:5px;font-size:14px;">time of post</span><br/>
+		</div>
+		
+    <p style="color:red">I am of this age an I like doing my staff the best way {{ age }}</p>
+    <script>
+     try{
+			 var socket = io.connect('http://127.0.0.1:8080');
+	         }catch(e){ 
+		  // set status to warn
+	         };
+			 
+			 if(socket != '')
+			 {
+				 
+			 }
+			  socket.on("message", function(message){
+					 $("#update_info").html('Last post:<br/>'+message);
+				 });
+				 
+			$("#user_submit").click(function(){
+				var date= new Date();
+					var hours = date.getHours();
+					  var minutes = date.getMinutes();
+					  var ampm = hours >= 12 ? 'pm' : 'am';
+					  hours = hours % 12;
+					  hours = hours ? hours : 12; // the hour '0' should be '12'
+					  minutes = minutes < 10 ? '0'+minutes : minutes;
+					  var strTime = hours + ':' + minutes + ' ' + ampm;
+				var messages = $("#user_input").val();
+				message = '<span id="posted_data" style="padding-left:5px;font-size:50px;color:red;">'+messages+'</span><br/><span id="posted_time" style="padding-left:5px;font-size:14px;color:black">Posted at '+strTime+'</span><br/>';
+				 socket.emit('message', message);
+				 socket.on("message", function(message){
+				 $("#update_info").html('Last post:<br/>'+message);
+				 });
+				$("#update_info").html('Last post:<br/>'+message);
+				
+			});
+    </script>
+    	<script src= "http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+  </body>
+</html>
